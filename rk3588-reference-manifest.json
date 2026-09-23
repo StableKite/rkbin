@@ -1,0 +1,85 @@
+{
+  "upstream_commit": "3e288fe814e059dd06833495f845cab04ac20a5c",
+  "removed_artifacts": [
+    {
+      "path": "bin/rk35/rk3588_bl31_v1.56.elf",
+      "size": 365344,
+      "sha256": "2864c2fc36333e03e7e3fe6459225d320d310850b4ac7620d1f3601efb7d4a9b"
+    },
+    {
+      "path": "bin/rk35/rk3588_bl32_v1.23.bin",
+      "size": 530920,
+      "sha256": "cb4ec2d0d8986b22cc55dbcf57c499f10fcca124bcd1e9a5d62cbf9ce0f40636"
+    },
+    {
+      "path": "bin/rk35/rk3588_ddr_lp4_1848MHz_lp5_2112MHz_eyescan_v1.24.bin",
+      "size": 79443,
+      "sha256": "2d521982466aa0de32f30897646ef8912ec8671d4b08a36ece144607cda154de"
+    },
+    {
+      "path": "bin/rk35/rk3588_ddr_lp4_1848MHz_lp5_2112MHz_v1.24.bin",
+      "size": 79443,
+      "sha256": "7d114862d4958841886afc97cf82affb2bd88bc3b968f636e7e9ed898410c353"
+    },
+    {
+      "path": "bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_eyescan_v1.24.bin",
+      "size": 79443,
+      "sha256": "93a50424431840010a26607a6fcadbc49652b8dddca539e55ad5f82e4cfbeda8"
+    },
+    {
+      "path": "bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_single_vdd2_v1.24.bin",
+      "size": 79443,
+      "sha256": "966ce9b7167c7432a225506df92d024cba4b7b15b45635557f45f09c9a69119b"
+    },
+    {
+      "path": "bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.24.bin",
+      "size": 79443,
+      "sha256": "2853a0da7ab895af43d50615af73eccf0694115dd0202483ee1c93c9071a42c3"
+    },
+    {
+      "path": "bin/rk35/rk3588_pcie_v3.20.bin",
+      "size": 6560,
+      "sha256": "a63ade015a1969f7f50be362e0809b0b13d160e4e8d0582fdda4a2d1126aa0ce"
+    },
+    {
+      "path": "bin/rk35/rk3588_ramboot_null0.bin",
+      "size": 512,
+      "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+    },
+    {
+      "path": "bin/rk35/rk3588_ramboot_null1.bin",
+      "size": 512,
+      "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+    },
+    {
+      "path": "bin/rk35/rk3588_ramboot_v1.06.bin",
+      "size": 49276,
+      "sha256": "10bbe6e80740cb0b9511cc84a9347cb90dd1915744b6511336d4fb75029c3691"
+    },
+    {
+      "path": "bin/rk35/rk3588_spl_v1.14.bin",
+      "size": 318282,
+      "sha256": "b811b90b6847dc251838e82036c328f00eaacefe94659432265a0ccb0fc8f4e5"
+    },
+    {
+      "path": "bin/rk35/rk3588_spl_v5_v1.00.bin",
+      "size": 288981,
+      "sha256": "9adef27f338b202dd8affefd0a3f86d13123b470e9a0e98c04fc87c5b23438dc"
+    },
+    {
+      "path": "bin/rk35/rk3588_usbplug_v1.11.bin",
+      "size": 90268,
+      "sha256": "fa38c130f3dd9160895543f0ef83833612963cc428c11f38ec9ecd66ae64d753"
+    },
+    {
+      "path": "specific/rk3588/rk3588_ddr_lp4_1560MHz_lp5_1968MHz_full_space_test_v1.21.bin",
+      "size": 58928,
+      "sha256": "780e9d32aa4c5e11fee4e00e3b53d6079dd9b404cc7f276faba3e8b0db5713cf"
+    },
+    {
+      "path": "specific/rk3588/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_max_freq_scan_v1.21.bin",
+      "size": 63376,
+      "sha256": "eebfabf3aee2b355c680b046217b48691810631d431efa5d4a0dd41eaf805950"
+    }
+  ]
+}

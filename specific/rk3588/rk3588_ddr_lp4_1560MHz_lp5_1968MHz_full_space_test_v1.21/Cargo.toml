@@ -1,0 +1,12 @@
+[package]
+name = "rk3588-ddr-lp4-1560mhz-lp5-1968mhz-full-space-test-v1-21"
+version = "0.0.1"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[dependencies]
+rk3588-ddr-core-v1-24 = { path = "../../../bin/rk35/rk3588_ddr_core_v1.24" }
+
+[lib]
+crate-type = ["rlib"]

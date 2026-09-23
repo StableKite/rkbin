@@ -1,0 +1,22 @@
+[workspace]
+resolver = "2"
+members = [
+  "rk3588-xtask",
+  "bin/rk35/rk3588_ddr_core_v1.24",
+  "bin/rk35/rk3588_bl31_v1.56",
+  "bin/rk35/rk3588_bl32_v1.23",
+  "bin/rk35/rk3588_pcie_v3.20",
+  "bin/rk35/rk3588_ramboot_v1.06",
+  "bin/rk35/rk3588_spl_v1.14",
+  "bin/rk35/rk3588_spl_v5_v1.00",
+  "bin/rk35/rk3588_usbplug_v1.11",
+  "bin/rk35/rk3588_ramboot_null0",
+  "bin/rk35/rk3588_ramboot_null1",
+  "bin/rk35/rk3588_ddr_lp4_1848MHz_lp5_2112MHz_eyescan_v1.24",
+  "bin/rk35/rk3588_ddr_lp4_1848MHz_lp5_2112MHz_v1.24",
+  "bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_eyescan_v1.24",
+  "bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_single_vdd2_v1.24",
+  "bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.24",
+  "specific/rk3588/rk3588_ddr_lp4_1560MHz_lp5_1968MHz_full_space_test_v1.21",
+  "specific/rk3588/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_max_freq_scan_v1.21",
+]

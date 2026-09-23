@@ -1,0 +1,9 @@
+[package]
+name = "rk3588-spl-v1-14"
+version = "0.0.1"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["rlib"]

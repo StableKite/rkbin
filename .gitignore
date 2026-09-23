@@ -2,3 +2,8 @@
 FlashHead.bin
 UsbHead.bin
 .diff*
+# RK3588/RK3588S artifacts are generated from Rust sources and must not be committed.
+/bin/rk35/rk3588_*.bin
+/bin/rk35/rk3588_*.elf
+/specific/rk3588/*.bin
+/target/
