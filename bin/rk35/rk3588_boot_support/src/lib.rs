@@ -85,3 +85,8 @@ pub const fn bootstrap_layout_consistent(h:BootstrapImageHeader)->bool{
     h.copy_src==STAGING_HEADER_BYTES&&h.copy_dst==PAYLOAD_RUNTIME_START&&match runtime_address(h.marker_file_offset){Some(a)=>a==h.copy_end,None=>false}
 }
 #[cfg(test)]mod stage14_tests{use super::*;#[test]fn layout_consistency(){let h=BootstrapImageHeader{vbar_el3:0,magic:0,reserved_330:0,mailbox_jump:0,mailbox_state:0,mailbox_entry:0,secondary_entry:0,secondary_state:0,copy_src:0x800,copy_dst:0x03001000,copy_end:0x0300C878,opaque_378:0,marker_file_offset:0xC078};assert!(bootstrap_layout_consistent(h));}}
+
+/// Stage 15: common bounded MMIO polling primitive used by connected boot flows.
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum Poll32Error{Timeout{last:u32}}
+pub fn poll32_mask_eq<I:Mmio32+DelayUs>(io:&mut I,addr:u64,mask:u32,expected:u32,attempts:u32,delay_us:u32)->Result<u32,Poll32Error>{let mut left=attempts;let mut last=io.read32(addr);loop{if last&mask==expected{return Ok(last)}if left==0{return Err(Poll32Error::Timeout{last})}left-=1;io.delay_us(delay_us);last=io.read32(addr);}}
+#[cfg(test)]mod stage15_tests{use super::*;struct M{seq:[u32;3],n:usize,d:u32}impl Mmio32 for M{fn read32(&mut self,_:u64)->u32{let v=self.seq[self.n.min(2)];self.n+=1;v}fn write32(&mut self,_:u64,_:u32){}}impl DelayUs for M{fn delay_us(&mut self,u:u32){self.d+=u}}#[test]fn poll(){let mut m=M{seq:[0,1,3],n:0,d:0};assert_eq!(poll32_mask_eq(&mut m,0,3,3,3,5),Ok(3));assert_eq!(m.d,10);}}

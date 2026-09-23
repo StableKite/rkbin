@@ -1,0 +1,3 @@
+use rk3588_boot_support::{BootstrapRunError,ControlTransfer,El3BootstrapRuntime};#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum ValidatedBootstrapError{InvalidLayout,Run(BootstrapRunError)}
+pub fn run_validated_bootstrap<R:El3BootstrapRuntime,T:ControlTransfer>(rt:&mut R,sink:&mut T,marker:u32,mpidr:u64,secondary_spin_limit:u32)->Result<T::Output,ValidatedBootstrapError>{if !crate::stage14::bootstrap_layout_valid(){return Err(ValidatedBootstrapError::InvalidLayout)}crate::stage13::run_and_dispatch(rt,sink,marker,mpidr,secondary_spin_limit).map_err(ValidatedBootstrapError::Run)}
+#[cfg(test)]mod tests{#[test]fn layout_gate(){assert!(crate::stage14::bootstrap_layout_valid());}}
