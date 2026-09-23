@@ -77,3 +77,11 @@ pub trait CacheRangeOps{fn clean_invalidate_range(&mut self,addr:u64,bytes:u32);
 pub trait ControlTransfer{type Output;fn direct(&mut self,address:u64)->Self::Output;fn indirect(&mut self,pointer_address:u64)->Self::Output;}
 pub fn complete_bootstrap<T:ControlTransfer>(sink:&mut T,transfer:BootstrapTransfer)->T::Output{match transfer{BootstrapTransfer::Direct(a)=>sink.direct(a),BootstrapTransfer::Indirect(p)=>sink.indirect(p)}}
 #[cfg(test)]mod stage13_tests{use super::*;struct T{kind:u8,addr:u64}impl ControlTransfer for T{type Output=u64;fn direct(&mut self,a:u64)->u64{self.kind=1;self.addr=a;a}fn indirect(&mut self,a:u64)->u64{self.kind=2;self.addr=a;a}}#[test]fn transfer(){let mut t=T{kind:0,addr:0};assert_eq!(complete_bootstrap(&mut t,BootstrapTransfer::Direct(0x1234)),0x1234);assert_eq!((t.kind,t.addr),(1,0x1234));assert_eq!(complete_bootstrap(&mut t,BootstrapTransfer::Indirect(0x88)),0x88);assert_eq!(t.kind,2);}}
+
+/// Stage 14: byte-granular transfer boundary used by PMU-MCU wake tags.
+pub trait ByteTransfer{fn copy_bytes_exact(&mut self,dst:u64,src:u64,bytes:u32);}
+pub trait Mmio8{fn read8(&mut self,addr:u64)->u8;}
+pub const fn bootstrap_layout_consistent(h:BootstrapImageHeader)->bool{
+    h.copy_src==STAGING_HEADER_BYTES&&h.copy_dst==PAYLOAD_RUNTIME_START&&match runtime_address(h.marker_file_offset){Some(a)=>a==h.copy_end,None=>false}
+}
+#[cfg(test)]mod stage14_tests{use super::*;#[test]fn layout_consistency(){let h=BootstrapImageHeader{vbar_el3:0,magic:0,reserved_330:0,mailbox_jump:0,mailbox_state:0,mailbox_entry:0,secondary_entry:0,secondary_state:0,copy_src:0x800,copy_dst:0x03001000,copy_end:0x0300C878,opaque_378:0,marker_file_offset:0xC078};assert!(bootstrap_layout_consistent(h));}}
