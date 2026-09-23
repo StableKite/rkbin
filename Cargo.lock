@@ -11,6 +11,10 @@ name = "rk3588-bl32-v1-23"
 version = "0.0.1"
 
 [[package]]
+name = "rk3588-boot-support"
+version = "0.0.1"
+
+[[package]]
 name = "rk3588-ddr-core-v1-24"
 version = "0.0.4"
 
@@ -66,6 +70,9 @@ dependencies = [
 [[package]]
 name = "rk3588-pcie-v3-20"
 version = "0.0.1"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-ramboot-null0"
@@ -78,18 +85,30 @@ version = "1.0.0"
 [[package]]
 name = "rk3588-ramboot-v1-06"
 version = "0.0.1"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-spl-v1-14"
 version = "0.0.1"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-spl-v5-v1-00"
 version = "0.0.1"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-usbplug-v1-11"
 version = "0.0.1"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-xtask"

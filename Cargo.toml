@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+  "bin/rk35/rk3588_boot_support",
   "rk3588-xtask",
   "bin/rk35/rk3588_ddr_core_v1.24",
   "bin/rk35/rk3588_bl31_v1.56",

@@ -1,12 +1,9 @@
 [package]
-name = "rk3588-spl-v5-v1-00"
+name = "rk3588-boot-support"
 version = "0.0.1"
 edition = "2024"
 license = "MIT"
 publish = false
-
-[dependencies]
-rk3588-boot-support = { path = "../rk3588_boot_support" }
 
 [lib]
 crate-type = ["rlib"]
