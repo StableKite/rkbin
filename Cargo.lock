@@ -5,10 +5,16 @@ version = 4
 [[package]]
 name = "rk3588-bl31-v1-56"
 version = "0.0.1"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-bl32-v1-23"
 version = "0.0.1"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-boot-support"

@@ -35,3 +35,26 @@ pub const fn bounded_retry(ready:bool,stored:u32,max_stored_before_stop:u32)->Re
 
 #[cfg(test)]extern crate std;
 #[cfg(test)]mod tests{use super::*;#[test]fn relocation(){assert_eq!(runtime_address(0x800),Some(0x0300_1000));assert_eq!(runtime_address(0x7ff),None);assert_eq!(relocation_words(0x1000,0x1010),Some(4));}#[test]fn pin(){let t=[PinReg{first_pin:0,reg:0x20},PinReg{first_pin:8,reg:0x24}];let f=strided_pin_field(&t,13,13,8,2).unwrap();assert_eq!(f,PinField{reg:0x24,bit:10,width:2});assert_eq!(grf_write_word(PinField{reg:0,bit:4,width:4},3),0x00F0_0030);}#[test]fn retry(){assert_eq!(bounded_retry(false,4,4),RetryAction::WarmReset{next_count:5});assert_eq!(bounded_retry(false,5,4),RetryAction::GiveUp);}}
+
+/// Stage 11: minimal MMIO/delay interfaces used by recovered state machines.
+pub trait Mmio32{fn read32(&mut self,addr:u64)->u32;fn write32(&mut self,addr:u64,value:u32);}
+pub trait DelayUs{fn delay_us(&mut self,us:u32);}
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub struct MmioWrite{pub addr:u64,pub value:u32}
+
+/// Qword header beginning at file offset 0x320 in USBPlug/RAMBOOT.
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub struct BootstrapImageHeader{
+    pub vbar_el3:u64,pub magic:u64,pub reserved_330:u64,pub mailbox_jump:u64,pub mailbox_state:u64,pub mailbox_entry:u64,
+    pub secondary_entry:u64,pub secondary_state:u64,pub copy_src:u64,pub copy_dst:u64,pub copy_end:u64,pub opaque_378:u64,pub marker_file_offset:u64,
+}
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum BootstrapEntryAction{
+    MarkerMismatch,
+    BootCpu{vbar_el3:u64,copy_src:u64,copy_dst:u64,copy_end:u64,post_relocation:u64},
+    SecondaryCpu{entry_mailbox:u64,state_mailbox:u64,jump_mailbox:u64,entry_value:u32,state_value:u32},
+}
+pub const fn bootstrap_entry_action(marker:u32,mpidr_el1:u64,h:BootstrapImageHeader,post_relocation:u64)->BootstrapEntryAction{
+    if marker as u64!=h.magic{return BootstrapEntryAction::MarkerMismatch}
+    if is_boot_cpu(mpidr_el1){BootstrapEntryAction::BootCpu{vbar_el3:h.vbar_el3,copy_src:h.copy_src,copy_dst:h.copy_dst,copy_end:h.copy_end,post_relocation}}
+    else{BootstrapEntryAction::SecondaryCpu{entry_mailbox:h.mailbox_entry,state_mailbox:h.mailbox_state,jump_mailbox:h.mailbox_jump,entry_value:h.secondary_entry as u32,state_value:h.secondary_state as u32}}
+}
+
+#[cfg(test)]mod stage11_tests{use super::*;const H:BootstrapImageHeader=BootstrapImageHeader{vbar_el3:0x300B000,magic:0x4B415351,reserved_330:0x30000,mailbox_jump:0xFF00001C,mailbox_state:0xFF000004,mailbox_entry:0xFF000008,secondary_entry:0x26C,secondary_state:0xDEADBEAF,copy_src:0x800,copy_dst:0x3001000,copy_end:0x300C878,opaque_378:0x336BB48,marker_file_offset:0xC078};#[test]fn bootstrap(){assert!(matches!(bootstrap_entry_action(0,H.magic,H,0),BootstrapEntryAction::MarkerMismatch));assert!(matches!(bootstrap_entry_action(H.magic as u32,0,H,0x3005A44),BootstrapEntryAction::BootCpu{..}));assert!(matches!(bootstrap_entry_action(H.magic as u32,1,H,0),BootstrapEntryAction::SecondaryCpu{entry_value:0x26C,state_value:0xDEADBEAF,..}));}}

@@ -1,0 +1,7 @@
+use rk3588_boot_support::{DelayUs,Mmio32,MmioWrite};
+pub const PMU_BUS_IDLE_REQ:u64=0xFD8D_810C;pub const PMU_BUS_IDLE_ACK:u64=0xFD8D_8118;pub const PMU_BUS_IDLE_ST:u64=0xFD8D_8120;
+pub const GPIO_BASES:[u64;5]=[0xFD8A_0000,0xFEC2_0000,0xFEC3_0000,0xFEC4_0000,0xFEC5_0000];
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum BusIdleError{InvalidId,Timeout{status:u32,ack:u32}}
+pub fn request_bus_idle<I:Mmio32+DelayUs>(io:&mut I,id:u8,idle:bool)->Result<(),BusIdleError>{if id>=16{return Err(BusIdleError::InvalidId)}let v=u32::from(idle);io.write32(PMU_BUS_IDLE_REQ,(1u32<<(id+16))|(v<<id));let mut left=1001u16;loop{let st=io.read32(PMU_BUS_IDLE_ST);let ack=io.read32(PMU_BUS_IDLE_ACK);if((st>>id)&1)==v&&((ack>>id)&1)==v{return Ok(())}left-=1;if left==0{return Err(BusIdleError::Timeout{status:st,ack})}io.delay_us(1)}}
+pub const fn gpio_level_write_plan(gpio:u32,level:bool)->Option<[MmioWrite;2]>{if gpio>159{return None}let pin=gpio&31;let base=GPIO_BASES[(gpio>>5)as usize];let l=if level{1}else{0};if pin>=16{let word=(l<<(pin-16))|(1u32<<pin);Some([MmioWrite{addr:base+4,value:word},MmioWrite{addr:base+12,value:word}])}else{let word=(1u32<<(pin+16))|(l<<pin);Some([MmioWrite{addr:base,value:word},MmioWrite{addr:base+8,value:word}])}}
+#[cfg(test)]mod tests{use super::*;#[test]fn gpio(){assert_eq!(gpio_level_write_plan(0,true).unwrap()[0],MmioWrite{addr:0xFD8A0000,value:0x00010001});let p=gpio_level_write_plan(16,true).unwrap();assert_eq!(p[0],MmioWrite{addr:0xFD8A0004,value:0x00010001});assert!(gpio_level_write_plan(160,false).is_none());}}
