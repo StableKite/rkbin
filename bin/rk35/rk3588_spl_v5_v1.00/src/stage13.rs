@@ -1,0 +1,3 @@
+use rk3588_boot_support::Mmio32;use crate::stage11::{sysreset_plan,SYSRESET_IN_PROGRESS};
+pub fn request_sysreset<I:Mmio32>(io:&mut I,cru_base:u64,code:u32)->i32{match sysreset_plan(cru_base,code){Ok(w)=>{io.write32(w.addr,w.value);SYSRESET_IN_PROGRESS}Err(e)=>e}}
+#[cfg(test)]mod tests{use super::*;struct M{a:u64,v:u32}impl Mmio32 for M{fn read32(&mut self,_:u64)->u32{0}fn write32(&mut self,a:u64,v:u32){self.a=a;self.v=v}}#[test]fn execute(){let mut m=M{a:0,v:0};assert_eq!(request_sysreset(&mut m,0x1000,0),-115);assert_eq!((m.a,m.v),(0x1C0C,0xECA8));assert_eq!(request_sysreset(&mut m,0x1000,1),-115);assert_eq!((m.a,m.v),(0x1C08,0xFDB9));}}

@@ -1,0 +1,4 @@
+use rk3588_boot_support::{BarrierOps,Mmio32};
+pub const ARCH_TIMER_MMIO:u64=0xFD8C_8000;pub trait ArchTimerIo:Mmio32+BarrierOps{fn write_cntfrq_el0(&mut self,hz:u32);}
+pub fn init_arch_timer<I:ArchTimerIo>(io:&mut I){io.write_cntfrq_el0(24_000_000);io.write32(ARCH_TIMER_MMIO+0x04,0);io.dsb();io.write32(ARCH_TIMER_MMIO+0x14,u32::MAX);io.write32(ARCH_TIMER_MMIO+0x18,u32::MAX);io.write32(ARCH_TIMER_MMIO+0x08,0);io.dsb();io.write32(ARCH_TIMER_MMIO+0x04,1);}
+#[cfg(test)]mod tests{use super::*;struct T{f:u32,n:u8,b:u8,last:(u64,u32)}impl Mmio32 for T{fn read32(&mut self,_:u64)->u32{0}fn write32(&mut self,a:u64,v:u32){self.n+=1;self.last=(a,v)}}impl BarrierOps for T{fn dsb(&mut self){self.b+=1}fn isb(&mut self){}}impl ArchTimerIo for T{fn write_cntfrq_el0(&mut self,h:u32){self.f=h}}#[test]fn timer(){let mut t=T{f:0,n:0,b:0,last:(0,0)};init_arch_timer(&mut t);assert_eq!(t.f,24_000_000);assert_eq!(t.n,5);assert_eq!(t.b,2);assert_eq!(t.last,(ARCH_TIMER_MMIO+4,1));}}
