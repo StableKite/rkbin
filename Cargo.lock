@@ -23,6 +23,9 @@ version = "0.0.1"
 [[package]]
 name = "rk3588-ddr-core-v1-24"
 version = "0.0.4"
+dependencies = [
+ "rk3588-boot-support",
+]
 
 [[package]]
 name = "rk3588-ddr-lp4-1560mhz-lp5-1968mhz-full-space-test-v1-21"
