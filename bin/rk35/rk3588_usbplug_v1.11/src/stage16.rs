@@ -1,0 +1,4 @@
+use rk3588_boot_support::{ControlTransfer,El3BootstrapRuntime};use rk3588_boot_support::stage16::{BootstrapSpec,bootstrap_spec_valid};use crate::stage15::ValidatedBootstrapError;
+pub const BOOTSTRAP_SPEC:BootstrapSpec=BootstrapSpec{header:crate::stage11::BOOT_HEADER,post_relocation:crate::stage11::POST_RELOCATION,expected_copy_bytes:crate::stage14::BOOT_COPY_BYTES};
+pub fn run_shared_bootstrap<R:El3BootstrapRuntime,T:ControlTransfer>(rt:&mut R,sink:&mut T,marker:u32,mpidr:u64,secondary_spin_limit:u32)->Result<T::Output,ValidatedBootstrapError>{if !bootstrap_spec_valid(BOOTSTRAP_SPEC){return Err(ValidatedBootstrapError::InvalidLayout)}crate::stage13::run_and_dispatch(rt,sink,marker,mpidr,secondary_spin_limit).map_err(ValidatedBootstrapError::Run)}
+#[cfg(test)]mod tests{use super::*;#[test]fn shared_spec(){assert!(bootstrap_spec_valid(BOOTSTRAP_SPEC));assert_eq!(BOOTSTRAP_SPEC.expected_copy_bytes,0x15898);}}

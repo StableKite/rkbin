@@ -90,3 +90,5 @@ pub const fn bootstrap_layout_consistent(h:BootstrapImageHeader)->bool{
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum Poll32Error{Timeout{last:u32}}
 pub fn poll32_mask_eq<I:Mmio32+DelayUs>(io:&mut I,addr:u64,mask:u32,expected:u32,attempts:u32,delay_us:u32)->Result<u32,Poll32Error>{let mut left=attempts;let mut last=io.read32(addr);loop{if last&mask==expected{return Ok(last)}if left==0{return Err(Poll32Error::Timeout{last})}left-=1;io.delay_us(delay_us);last=io.read32(addr);}}
 #[cfg(test)]mod stage15_tests{use super::*;struct M{seq:[u32;3],n:usize,d:u32}impl Mmio32 for M{fn read32(&mut self,_:u64)->u32{let v=self.seq[self.n.min(2)];self.n+=1;v}fn write32(&mut self,_:u64,_:u32){}}impl DelayUs for M{fn delay_us(&mut self,u:u32){self.d+=u}}#[test]fn poll(){let mut m=M{seq:[0,1,3],n:0,d:0};assert_eq!(poll32_mask_eq(&mut m,0,3,3,3,5),Ok(3));assert_eq!(m.d,10);}}
+
+pub mod stage16;
